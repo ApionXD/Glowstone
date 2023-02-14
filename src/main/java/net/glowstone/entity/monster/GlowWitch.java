@@ -25,14 +25,6 @@ public class GlowWitch extends GlowRaider implements Witch {
         setBoundingBox(0.6, 1.8);
     }
 
-    public boolean isAggressive() {
-        return metadata.getBoolean(MetadataIndex.WITCH_AGGRESSIVE);
-    }
-
-    public void setAggressive(boolean aggressive) {
-        metadata.set(MetadataIndex.WITCH_AGGRESSIVE, aggressive);
-    }
-
     @Override
     public Sound getHurtSound() {
         return Sound.ENTITY_WITCH_HURT;

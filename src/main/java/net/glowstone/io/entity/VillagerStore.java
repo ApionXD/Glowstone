@@ -19,10 +19,6 @@ class VillagerStore extends AgeableStore<GlowVillager> {
     @Override
     public void load(GlowVillager entity, CompoundTag compound) {
         super.load(entity, compound);
-        compound.tryGetInt("Profession")
-            .filter(GlowVillager::isValidProfession)
-            .map(GlowVillager::getProfessionById)
-            .ifPresent(entity::setProfession);
         compound.tryGetInt("Career")
             .map(GlowVillager::getProfessionById)
             .ifPresent(career -> {
@@ -30,7 +26,6 @@ class VillagerStore extends AgeableStore<GlowVillager> {
                 entity.setCareerLevel(compound.tryGetInt("CareerLevel").orElse(1));
             });
         compound.readInt("Riches", entity::setRiches);
-        compound.readBoolean("Willing", entity::setWilling);
         // Recipes
         compound.readCompound("Offers", offers -> offers.readCompoundList("Recipes",
             recipesList -> {
@@ -59,9 +54,6 @@ class VillagerStore extends AgeableStore<GlowVillager> {
     @Override
     public void save(GlowVillager entity, CompoundTag tag) {
         super.save(entity, tag);
-        if (entity.getProfession() != null) {
-            tag.putInt("Profession", entity.getProfession().ordinal());
-        }
         tag.putInt("Riches", entity.getRiches());
         tag.putBool("Willing", entity.isWilling());
         tag.putInt("CareerLevel", entity.getCareerLevel());

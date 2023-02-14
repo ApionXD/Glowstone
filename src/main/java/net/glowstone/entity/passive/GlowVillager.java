@@ -131,14 +131,13 @@ public class GlowVillager extends GlowAgeable implements Villager {
     }
 
     @Override
-    public Profession getProfession() {
-        return PROFESSIONS[metadata.getInt(MetadataIndex.VILLAGER_PROFESSION)];
+    public @NotNull Profession getProfession() {
+        return Profession.ARMORER;
     }
 
     @Override
-    public void setProfession(Profession profession) {
-        metadata.set(MetadataIndex.VILLAGER_PROFESSION, profession.ordinal());
-        setProfession(getRandomProfession(ThreadLocalRandom.current()));
+    public void setProfession(@NotNull Profession profession) {
+
     }
 
     @Override

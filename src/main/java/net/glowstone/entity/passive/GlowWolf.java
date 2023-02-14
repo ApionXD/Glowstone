@@ -93,24 +93,6 @@ public class GlowWolf extends GlowTameable implements Wolf {
         return false;
     }
 
-    /**
-     * Gets whether the wolf is in the 'begging' state.
-     *
-     * @return whether the wolf is in the 'begging' state.
-     */
-    public boolean isBegging() {
-        return metadata.getBoolean(MetadataIndex.WOLF_BEGGING);
-    }
-
-    /**
-     * Sets whether the wolf is in the 'begging' state.
-     *
-     * @param begging whether the wolf is in the 'begging' state.
-     */
-    public void setBegging(boolean begging) {
-        metadata.set(MetadataIndex.WOLF_BEGGING, begging);
-    }
-
     @Override
     public void setTamed(boolean isTamed) {
         if (isTamed() != isTamed) {

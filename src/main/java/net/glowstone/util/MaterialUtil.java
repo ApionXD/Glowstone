@@ -20,14 +20,21 @@ public class MaterialUtil {
         if (type.isLegacy()) {
             return type.getId();
         }
-        BlockDataManager blockDataManager = ((GlowServer) Bukkit.getServer()).getBlockDataManager();
-        try {
-            StatefulBlockData blockData = blockDataManager.createBlockData(type);
-            return getId(blockData);
-        } catch (NullPointerException e) {
-            getLogger().warning("Unknown material: " + type);
-            throw e;
+        if (type.isItem()) {
+            //This is NOT correct, we need to get the actual protocol id for the material
+            return 1;
         }
+        if (type.isBlock()) {
+            BlockDataManager blockDataManager = ((GlowServer) Bukkit.getServer()).getBlockDataManager();
+            try {
+                StatefulBlockData blockData = blockDataManager.createBlockData(type);
+                return getId(blockData);
+            } catch (NullPointerException e) {
+                getLogger().warning("Unknown material: " + type);
+                throw e;
+            }
+        }
+        throw new UnsupportedOperationException("Material " + type.toString() + " is not an item, block, or legacy material");
     }
 
 }

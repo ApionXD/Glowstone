@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.glowstone.util.TextMessage;
 import net.glowstone.util.nbt.CompoundTag;
+import org.bukkit.entity.Pose;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.EulerAngle;
@@ -31,10 +32,10 @@ public enum MetadataType {
     OPTUUID(UUID.class, true),
     BLOCKID(Integer.class, false),
     NBTTAG(CompoundTag.class, false),
-    PARTICLE(ParticleBuilder.class, false);
+    PARTICLE(ParticleBuilder.class, false),
     // TODO 1.19 VILLAGER_DATA
-    // TODO 1.19 OPTVARINT
-    // TODO 1.19 POSE
+    OPTINT(Integer.class, true),
+    POSE(Pose.class, false);
     // TODO 1.19 CAT_VARIANT
     // TODO 1.19 FROG_VARIANT
     // TODO 1.19 PAINTING_VARIANT

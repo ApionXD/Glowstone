@@ -158,12 +158,12 @@ public class GlowArrow extends GlowProjectile implements Arrow {
 
     @Override
     public boolean isCritical() {
-        return metadata.getBit(MetadataIndex.ARROW_CRITICAL, 0x1);
+        return metadata.getBit(MetadataIndex.ABSTRACT_ARROW_STATUS, 0x1);
     }
 
     @Override
     public void setCritical(boolean critical) {
-        metadata.setBit(MetadataIndex.ARROW_CRITICAL, 0x1, critical);
+        metadata.setBit(MetadataIndex.STATUS, 0x1, critical);
     }
 
     @Override

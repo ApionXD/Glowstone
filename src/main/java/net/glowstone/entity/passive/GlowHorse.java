@@ -105,7 +105,6 @@ public class GlowHorse extends GlowAbstractHorse implements Horse {
         List<Message> messages = super.createSpawnMessage();
         MetadataMap map = new MetadataMap(GlowHorse.class);
         map.set(MetadataIndex.HORSE_STYLE, getHorseStyleData());
-        map.set(MetadataIndex.HORSE_ARMOR, getHorseArmorData());
         messages.add(new EntityMetadataMessage(entityId, map.getEntryList()));
         return messages;
     }

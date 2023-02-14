@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.glowstone.entity.passive.GlowParrot;
 import net.glowstone.entity.passive.GlowTameable;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.ArmorStand;
@@ -33,6 +35,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Pig;
@@ -63,22 +66,7 @@ import org.bukkit.entity.ZombieVillager;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.entity.minecart.PoweredMinecart;
 
-import static net.glowstone.entity.meta.MetadataType.BLOCKID;
-import static net.glowstone.entity.meta.MetadataType.BOOLEAN;
-import static net.glowstone.entity.meta.MetadataType.BYTE;
-import static net.glowstone.entity.meta.MetadataType.CHAT;
-import static net.glowstone.entity.meta.MetadataType.DIRECTION;
-import static net.glowstone.entity.meta.MetadataType.FLOAT;
-import static net.glowstone.entity.meta.MetadataType.INT;
-import static net.glowstone.entity.meta.MetadataType.ITEM;
-import static net.glowstone.entity.meta.MetadataType.NBTTAG;
-import static net.glowstone.entity.meta.MetadataType.OPTCHAT;
-import static net.glowstone.entity.meta.MetadataType.OPTPOSITION;
-import static net.glowstone.entity.meta.MetadataType.OPTUUID;
-import static net.glowstone.entity.meta.MetadataType.PARTICLE;
-import static net.glowstone.entity.meta.MetadataType.POSITION;
-import static net.glowstone.entity.meta.MetadataType.STRING;
-import static net.glowstone.entity.meta.MetadataType.VECTOR;
+import static net.glowstone.entity.meta.MetadataType.*;
 
 /**
  * Index constants for entity metadata.
@@ -93,191 +81,195 @@ public enum MetadataIndex {
     SHOW_NAME_TAG(3, BOOLEAN, Entity.class),
     SILENT(4, BOOLEAN, Entity.class),
     NOGRAVITY(5, BOOLEAN, Entity.class),
+    ENTITY_POSE(6, POSE, Entity.class),
+    TICKS_FROZEN(7, INT, Entity.class),
+    AREAEFFECTCLOUD_RADIUS(8, FLOAT, AreaEffectCloud.class),
+    AREAEFFECTCLOUD_COLOR(9, INT, AreaEffectCloud.class),
+    AREAEFFECTCLOUD_POINT(10, BOOLEAN, AreaEffectCloud.class),
+    AREAEFFECTCLOUD_PARTICLE(11, PARTICLE, AreaEffectCloud.class),
 
-    AREAEFFECTCLOUD_RADIUS(6, FLOAT, AreaEffectCloud.class),
-    AREAEFFECTCLOUD_COLOR(7, INT, AreaEffectCloud.class),
-    AREAEFFECTCLOUD_POINT(8, BOOLEAN, AreaEffectCloud.class),
-    AREAEFFECTCLOUD_PARTICLE(9, PARTICLE, AreaEffectCloud.class),
+    ABSTRACT_ARROW_STATUS(8, BYTE, AbstractArrow.class),
+    ABSTRACT_ARROW_PIERCING(9, BYTE, AbstractArrow.class),
 
-    ARROW_CRITICAL(6, BYTE, Arrow.class),
-    ARROW_SHOOTER_ID(7, OPTUUID, Arrow.class),
+    TIPPEDARROW_COLOR(10, INT, Arrow.class),
 
-    TIPPEDARROW_COLOR(8, INT, TippedArrow.class),
+    TRIDENT_LOYALTY(10, INT, Trident.class),
+    TRIDENT_GLINT(11, BOOLEAN, Trident.class),
 
-    TRIDENT_LOYALTY(8, INT, Trident.class),
+    BOAT_HIT_TIME(8, INT, Boat.class),
+    BOAT_DIRECTION(9, INT, Boat.class),
+    BOAT_DAMAGE_TAKEN(10, FLOAT, Boat.class),
+    BOAT_TYPE(11, INT, Boat.class),
+    BOAT_RIGHT_PADDLE_TURNING(13, BOOLEAN, Boat.class),
+    BOAT_LEFT_PADDLE_TURNING(12, BOOLEAN, Boat.class),
+    BOAT_SPLASH_TIMER(14, INT, Boat.class),
 
-    BOAT_HIT_TIME(6, INT, Boat.class),
-    BOAT_DIRECTION(7, INT, Boat.class),
-    BOAT_DAMAGE_TAKEN(8, FLOAT, Boat.class),
-    BOAT_TYPE(9, INT, Boat.class),
-    BOAT_RIGHT_PADDLE_TURNING(10, BOOLEAN, Boat.class),
-    BOAT_LEFT_PADDLE_TURNING(11, BOOLEAN, Boat.class),
-    BOAT_SPLASH_TIMER(12, INT, Boat.class),
+    ENDERCRYSTAL_BEAM_TARGET(8, OPTPOSITION, EnderCrystal.class),
+    ENDERCRYSTAL_SHOW_BOTTOM(9, BOOLEAN, EnderCrystal.class),
 
-    ENDERCRYSTAL_BEAM_TARGET(6, OPTPOSITION, EnderCrystal.class),
-    ENDERCRYSTAL_SHOW_BOTTOM(7, BOOLEAN, EnderCrystal.class),
+    WITHERSKULL_INVULNERABLE(8, BOOLEAN, WitherSkull.class),
 
-    WITHERSKULL_INVULNERABLE(6, BOOLEAN, WitherSkull.class),
+    FIREWORK_INFO(8, ITEM, Firework.class),
+    FIREWORK_ENTITY(9, OPTINT, Firework.class),
+    FIREWORK_SHOT_AT_ANGLE(10, OPTINT, Firework.class),
 
-    FIREWORK_INFO(6, ITEM, Firework.class),
-    FIREWORK_ENTITY(7, INT, Firework.class),
+    ITEM_FRAME_ITEM(8, ITEM, ItemFrame.class),
+    ITEM_FRAME_ROTATION(9, INT, ItemFrame.class),
+    ITEM_ITEM(8, ITEM, Item.class),
 
-    ITEM_FRAME_ITEM(6, ITEM, ItemFrame.class),
-    ITEM_FRAME_ROTATION(7, INT, ItemFrame.class),
-    ITEM_ITEM(6, ITEM, Item.class),
+    HAND_USED(8, BYTE, LivingEntity.class),
+    HEALTH(9, FLOAT, LivingEntity.class),
+    POTION_COLOR(10, INT, LivingEntity.class),
+    POTION_AMBIENT(11, BOOLEAN, LivingEntity.class),
+    ARROW_COUNT(12, BYTE, LivingEntity.class),
+    BEE_STINGS(13, INT, LivingEntity.class),
+    SLEEPING_LOC(14, OPTPOSITION, LivingEntity.class),
 
-    HAND_USED(6, BYTE, LivingEntity.class),
-    HEALTH(7, FLOAT, LivingEntity.class),
-    POTION_COLOR(8, INT, LivingEntity.class),
-    POTION_AMBIENT(9, BOOLEAN, LivingEntity.class),
-    ARROW_COUNT(10, BYTE, LivingEntity.class),
+    PLAYER_EXTRA_HEARTS(15, FLOAT, Player.class),
+    PLAYER_SCORE(16, INT, Player.class),
+    PLAYER_SKIN_PARTS(17, BYTE, Player.class),
+    PLAYER_MAIN_HAND(18, BYTE, Player.class),
+    PLAYER_LEFT_SHOULDER(19, NBTTAG, Player.class),
+    PLAYER_RIGHT_SHOULDER(20, NBTTAG, Player.class),
 
-    PLAYER_EXTRA_HEARTS(11, FLOAT, Player.class),
-    PLAYER_SCORE(12, INT, Player.class),
-    PLAYER_SKIN_PARTS(13, BYTE, Player.class),
-    PLAYER_MAIN_HAND(14, BYTE, Player.class),
-    PLAYER_LEFT_SHOULDER(15, NBTTAG, Player.class),
-    PLAYER_RIGHT_SHOULDER(16, NBTTAG, Player.class),
+    ARMORSTAND_FLAGS(15, BYTE, ArmorStand.class),
+    ARMORSTAND_HEAD_POSITION(16, VECTOR, ArmorStand.class),
+    ARMORSTAND_BODY_POSITION(17, VECTOR, ArmorStand.class),
+    ARMORSTAND_LEFT_ARM_POSITION(18, VECTOR, ArmorStand.class),
+    ARMORSTAND_RIGHT_ARM_POSITION(19, VECTOR, ArmorStand.class),
+    ARMORSTAND_LEFT_LEG_POSITION(20, VECTOR, ArmorStand.class),
+    ARMORSTAND_RIGHT_LEG_POSITION(21, VECTOR, ArmorStand.class),
 
-    ARMORSTAND_FLAGS(11, BYTE, ArmorStand.class),
-    ARMORSTAND_HEAD_POSITION(12, VECTOR, ArmorStand.class),
-    ARMORSTAND_BODY_POSITION(13, VECTOR, ArmorStand.class),
-    ARMORSTAND_LEFT_ARM_POSITION(14, VECTOR, ArmorStand.class),
-    ARMORSTAND_RIGHT_ARM_POSITION(15, VECTOR, ArmorStand.class),
-    ARMORSTAND_LEFT_LEG_POSITION(16, VECTOR, ArmorStand.class),
-    ARMORSTAND_RIGHT_LEG_POSITION(17, VECTOR, ArmorStand.class),
+    NO_AI(15, BYTE, Mob.class),
 
-    //NO_AI(10, BYTE, Insentient.class),
     // TODO - 1.9 "Insentient extends Living". Need more information
 
-    BAT_FLAGS(12, BYTE, Bat.class),
 
-    AGE_ISBABY(12, BOOLEAN, Ageable.class),
+    BAT_FLAGS(16, BYTE, Bat.class),
 
-    ABSTRACT_HORSE_FLAGS(13, BYTE, AbstractHorse.class),
-    ABSTRACT_HORSE_OWNER(14, OPTUUID, AbstractHorse.class),
+    AGE_ISBABY(16, BOOLEAN, Ageable.class),
 
-    HORSE_STYLE(15, INT, Horse.class),
-    HORSE_ARMOR(16, INT, Horse.class),
+    ABSTRACT_HORSE_FLAGS(17, BYTE, AbstractHorse.class),
+    ABSTRACT_HORSE_OWNER(18, OPTUUID, AbstractHorse.class),
 
-    CHESTED_HORSE_HAS_CHEST(15, BOOLEAN, ChestedHorse.class),
+    HORSE_STYLE(19, INT, Horse.class),
 
-    LLAMA_STRENGTH(16, INT, Llama.class),
-    LLAMA_CARPET(17, INT, Llama.class),
-    LLAMA_VARIANT(18, INT, Llama.class),
+    CHESTED_HORSE_HAS_CHEST(19, BOOLEAN, ChestedHorse.class),
 
-    PIG_SADDLE(13, BOOLEAN, Pig.class),
-    PIG_BOOST(14, INT, Pig.class),
+    LLAMA_STRENGTH(20, INT, Llama.class),
+    LLAMA_CARPET(21, INT, Llama.class),
+    LLAMA_VARIANT(22, INT, Llama.class),
 
-    RABBIT_TYPE(13, INT, Rabbit.class),
+    PIG_SADDLE(17, BOOLEAN, Pig.class),
+    PIG_BOOST(18, INT, Pig.class),
 
-    SHEEP_DATA(13, BYTE, Sheep.class),
+    RABBIT_TYPE(17, INT, Rabbit.class),
 
-    TAMEABLEAANIMAL_STATUS(13, BYTE, GlowTameable.class),
-    TAMEABLEANIMAL_OWNER(14, OPTUUID, GlowTameable.class),
+    SHEEP_DATA(17, BYTE, Sheep.class),
 
-    OCELOT_TYPE(15, INT, Ocelot.class),
+    TAMEABLEAANIMAL_STATUS(17, BYTE, GlowTameable.class),
+    TAMEABLEANIMAL_OWNER(18, OPTUUID, GlowTameable.class),
 
-    WOLF_HEALTH(15, FLOAT, Wolf.class),
-    WOLF_BEGGING(16, BOOLEAN, Wolf.class),
-    WOLF_COLOR(17, BYTE, Wolf.class),
+    OCELOT_TYPE(17, INT, Ocelot.class),
 
-    VILLAGER_PROFESSION(13, INT, Villager.class),
+    WOLF_HEALTH(19, FLOAT, Wolf.class),
+    WOLF_COLOR(20, INT, Wolf.class),
+    WOLF_ANGER_TIME(21, INT, Wolf.class),
+    ABSTRACT_VILLAGER_SHAKE(17, INT, AbstractVillager.class),
 
-    GOLEM_PLAYER_BUILT(12, BYTE, IronGolem.class),
+    //Villager data has been changed significantly
+    //VILLAGER_PROFESSION(13, INT, Villager.class),
 
-    SNOWMAN_NOHAT(12, BYTE, Snowman.class),
+    GOLEM_PLAYER_BUILT(16, BYTE, IronGolem.class),
 
-    SHULKER_FACING_DIRECTION(12, DIRECTION, Shulker.class),
-    SHULKER_ATTACHMENT_POSITION(13, OPTPOSITION, Shulker.class),
-    SHULKER_SHIELD_HEIGHT(14, BYTE, Shulker.class),
-    SHULKER_COLOR(15, BYTE, Shulker.class),
+    SNOWMAN_NOHAT(16, BYTE, Snowman.class),
 
-    BLAZE_ON_FIRE(12, BYTE, Blaze.class),
+    SHULKER_FACING_DIRECTION(16, DIRECTION, Shulker.class),
+    SHULKER_ATTACHMENT_POSITION(17, OPTPOSITION, Shulker.class),
+    SHULKER_SHIELD_HEIGHT(18, BYTE, Shulker.class),
+    SHULKER_COLOR(19, BYTE, Shulker.class),
 
-    CREEPER_STATE(12, INT, Creeper.class),
-    CREEPER_POWERED(13, BOOLEAN, Creeper.class),
-    CREEPER_IGNITED(14, BOOLEAN, Creeper.class),
+    BLAZE_ON_FIRE(16, BYTE, Blaze.class),
 
-    GUARDIAN_SPIKES(12, BOOLEAN, Guardian.class),
-    GUARDIAN_TARGET(13, INT, Guardian.class),
+    CREEPER_STATE(16, INT, Creeper.class),
+    CREEPER_POWERED(17, BOOLEAN, Creeper.class),
+    CREEPER_IGNITED(18, BOOLEAN, Creeper.class),
 
-    SKELETON_HANDS_RISEN_UP(12, BOOLEAN, Skeleton.class),
+    GUARDIAN_SPIKES(16, BOOLEAN, Guardian.class),
+    GUARDIAN_TARGET(17, INT, Guardian.class),
 
-    SPIDER_CLIMBING(12, BYTE, Spider.class),
+    SPIDER_CLIMBING(16, BYTE, Spider.class),
 
-    WITCH_AGGRESSIVE(13, BOOLEAN, Witch.class),
+    DRINKING_POTION(17, BOOLEAN, Witch.class),
 
-    WITHER_TARGET_1(12, INT, Wither.class),
-    WITHER_TARGET_2(13, INT, Wither.class),
-    WITHER_TARGET_3(14, INT, Wither.class),
-    WITHER_INVULN_TIME(15, INT, Wither.class),
+    WITHER_TARGET_1(16, INT, Wither.class),
+    WITHER_TARGET_2(17, INT, Wither.class),
+    WITHER_TARGET_3(18, INT, Wither.class),
+    WITHER_INVULN_TIME(19, INT, Wither.class),
 
-    ZOMBIE_IS_CHILD(12, BOOLEAN, Zombie.class),
-    ZOMBIE_PROFESSION(13, INT, Zombie.class), // Unused as of 1.11
-    ZOMBIE_HANDS_RISED_UP(14, BOOLEAN, Zombie.class),
-    ZOMBIE_BECOMING_DROWNED(15, BOOLEAN, Zombie.class),
+    ZOMBIE_IS_CHILD(16, BOOLEAN, Zombie.class),
+    ZOMBIE_PROFESSION(17, INT, Zombie.class), // Unused as of 1.11
+    ZOMBIE_BECOMING_DROWNED(18, BOOLEAN, Zombie.class),
 
     ZOMBIE_VILLAGER_IS_CONVERTING(16, BOOLEAN, ZombieVillager.class),
+    //Villager data is very different now
     ZOMBIE_VILLAGER_PROFESSION(17, INT, ZombieVillager.class),
 
-    ENDERMAN_BLOCK(12, BLOCKID, Enderman.class),
-    ENDERMAN_SCREAMING(13, BOOLEAN, Enderman.class),
+    ENDERMAN_BLOCK(16, BLOCKID, Enderman.class),
+    ENDERMAN_SCREAMING(17, BOOLEAN, Enderman.class),
+    ENDERMAN_STARING(18, BOOLEAN, Enderman.class),
 
-    ENDERDRAGON_PHASE(12, INT, EnderDragon.class),
+    ENDERDRAGON_PHASE(16, INT, EnderDragon.class),
 
-    GHAST_ATTACKING(12, BOOLEAN, Ghast.class),
+    GHAST_ATTACKING(16, BOOLEAN, Ghast.class),
 
-    SLIME_SIZE(12, INT, Slime.class),
+    SLIME_SIZE(16, INT, Slime.class),
 
-    POLARBEAR_STANDING(13, BOOLEAN, PolarBear.class),
+    POLARBEAR_STANDING(17, BOOLEAN, PolarBear.class),
 
-    MINECART_SHAKE_POWER(6, INT, Minecart.class),
-    MINECART_SHAKE_DIRECTION(7, INT, Minecart.class),
-    MINECART_DAMAGE_TAKEN(8, FLOAT, Minecart.class),
-    MINECART_BLOCK(9, INT, Minecart.class),
-    MINECART_BLOCK_OFFSET(10, INT, Minecart.class),
-    MINECART_BLOCK_SHOWN(11, BYTE, Minecart.class),
+    MINECART_SHAKE_POWER(8, INT, Minecart.class),
+    MINECART_SHAKE_DIRECTION(9, INT, Minecart.class),
+    MINECART_DAMAGE_TAKEN(10, FLOAT, Minecart.class),
+    MINECART_BLOCK(11, INT, Minecart.class),
+    MINECART_BLOCK_OFFSET(12, INT, Minecart.class),
+    MINECART_BLOCK_SHOWN(13, BOOLEAN, Minecart.class),
 
-    EVOKER_SPELL(12, BYTE, Evoker.class),
+    EVOKER_SPELL(17, BYTE, Evoker.class),
 
-    VEX_STATE(12, BYTE, Vex.class),
+    VEX_STATE(16, BYTE, Vex.class),
 
-    VINDICATOR_STATE(12, BYTE, Vindicator.class),
+    PHANTOM_SIZE(16, INT, Phantom.class),
 
-    PHANTOM_SIZE(12, INT, Phantom.class),
+    DOLPHIN_TREASURE_POSITION(16, POSITION, Dolphin.class),
+    DOLPHIN_HAS_FISH(17, POSITION, Dolphin.class),
+    DOLPHIN_MOISTURE(18, INT, Dolphin.class),
 
-    DOLPHIN_TREASURE_POSITION(12, POSITION, Dolphin.class),
-    DOLPHIN_CAN_FIND_TREASURE(13, BOOLEAN, Dolphin.class),
-    DOLPHIN_HAS_FISH(14, POSITION, Dolphin.class),
+    FISH_FROM_BUCKET(16, BOOLEAN, Fish.class),
 
-    FISH_FROM_BUCKET(12, BOOLEAN, Fish.class),
+    PUFFER_FISH_STATE(17, INT, PufferFish.class),
 
-    PUFFER_FISH_STATE(13, INT, PufferFish.class),
+    TROPICAL_FISH_VARIANT(17, INT, TropicalFish.class),
 
-    TROPICAL_FISH_VARIANT(13, INT, TropicalFish.class),
+    TURTLE_HOME_POSITION(17, POSITION, Turtle.class),
+    TURTLE_HAS_EGG(18, BOOLEAN, Turtle.class),
+    TURTLE_LAYING_EGG(19, BOOLEAN, Turtle.class),
+    TURTLE_TRAVEL_POS(20, POSITION, Turtle.class),
+    TURTLE_GOING_HOME(21, BOOLEAN, Turtle.class),
+    TURTLE_TRAVELLING(22, BOOLEAN, Turtle.class),
 
-    TURTLE_HOME_POSITION(13, POSITION, Turtle.class),
-    TURTLE_HAS_EGG(14, BOOLEAN, Turtle.class),
-    TURTLE_LAYING_EGG(15, BOOLEAN, Turtle.class),
-    TURTLE_TRAVEL_POS(16, POSITION, Turtle.class),
-    TURTLE_GOING_HOME(17, BOOLEAN, Turtle.class),
-    TURTLE_TRAVELLING(18, BOOLEAN, Turtle.class),
+    PARROT_VARIANT(19, INT, GlowParrot.class),
 
-    DROWNED_HAS_TARGET(15, BOOLEAN, Drowned.class),
+    MINECARTCOMMANDBLOCK_COMMAND(14, STRING, CommandMinecart.class),
+    MINECARTCOMMANDBLOCK_LAST_OUTPUT(15, CHAT, CommandMinecart.class),
 
-    PARROT_VARIANT(15, INT, GlowParrot.class),
-
-    MINECARTCOMMANDBLOCK_COMMAND(12, STRING, CommandMinecart.class),
-    MINECARTCOMMANDBLOCK_LAST_OUTPUT(13, CHAT, CommandMinecart.class),
-
-    FURNACE_MINECART_POWERED(12, BOOLEAN, PoweredMinecart.class),
-    TNT_PRIMED(6, INT, TNTPrimed.class),
+    FURNACE_MINECART_POWERED(14, BOOLEAN, PoweredMinecart.class),
+    TNT_PRIMED(8, INT, TNTPrimed.class),
 
     /**
      * Hooked entity id + 1, or 0 if there is no hooked entity.
      */
-    FISHING_HOOK_HOOKED_ENTITY(6, INT, FishHook.class);
+    FISHING_HOOK_HOOKED_ENTITY(8, INT, FishHook.class),
+    FISHING_HOOK_CATCHABLE(9, BOOLEAN, FishHook.class);
 
     @Getter
     private final int index;
